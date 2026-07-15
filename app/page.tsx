@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useAccount, useConnect, useDisconnect, useBalance, useSendTransaction } from 'wagmi'
-import { parseUnits } from 'viem'
+import { parseUnits, formatUnits } from 'viem'
 
 export default function Home() {
   // Wallet state hooks
@@ -26,10 +26,9 @@ export default function Home() {
     e.preventDefault()
     if (!recipient || !amount) return
 
-    // Arc native USDC uses 6 decimals
     sendTransaction({
       to: recipient as `0x${string}`,
-      value: parseUnits(amount, 6),
+      value: parseUnits(amount, 18)
     })
   }
 
@@ -82,7 +81,7 @@ export default function Home() {
                 <div className="space-y-1 text-left sm:text-right">
                   <span className="text-xs text-slate-500 font-mono block">Native Balance</span>
                   <span className="text-base font-bold text-emerald-400">
-                    {balance ? `${parseFloat(balance.formatted).toFixed(2)} ${balance.symbol}` : 'Loading...'}
+                    {balance ? `${parseFloat(formatUnits(balance.value, balance.decimals)).toFixed(2)} ${balance.symbol}` : 'Loading...'}
                   </span>
                 </div>
               </div>
